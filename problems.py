@@ -1,4 +1,5 @@
 import util
+from game import Directions, Actions
 
 
 class SearchProblem:
@@ -44,45 +45,147 @@ class SearchProblem:
         util.raiseNotDefined()
 
 
+# TODO
 class SingleFoodSearchProblem(SearchProblem):
-    def __init__(self, startingGameState):
+    """
+    SingleFoodSearchProblem is used to find paths to a particular point on the board
+    """
+
+    def __init__(self, startingGameState, start=None, goal=(1, 1), costFunc=lambda x: 1, warn=True, visualize=True):
         # TODO 1
-        pass
+        """
+        Save start and goal positions (x, y)
+        startingGameState: a GameState object (in pacman.py)
+        costFunc: a function from a search state to a positive number
+        goal: a position in the startingGameState
+        """
+        self.walls = startingGameState.getWalls()
+        self.startState = startingGameState.getPacmanPosition()
+        if start is not None:
+            self.startState = start
+
+        self.goal = goal
+        self.costFunc = costFunc
+        self.visualize = visualize
+
+        if warn and (startingGameState.getNumFood() != 1 or not startingGameState.hasFood(*goal)):
+            print("The maze is not for single food search")
 
     def getStartState(self):
-        # TODO 1
-        pass
+        # TODO 2
+        return self.startState
 
     def isGoalState(self, state):
         # TODO 3
-        pass
+        return state == self.goal
 
     def getSuccessors(self, state):
         # TODO 4
-        pass
+        """
+        For a given state, it will return a list of (successor, action, stepCost):
+        - successor: successor to the current state
+        - action: required action to get there
+        - stepCost: the incremental cost of expanding to the successor
+        """
+        successors = []
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            x, y = state
+            dx, dy = Actions.directionToVector(action)
+            successor_x = int(x + dx)
+            successor_y = int(y + dy)
+            if not self.walls[successor_x][successor_y]:
+                successor = (successor_x, successor_y)
+                stepCost = self.costFunc(successor)
+                successors.append((successor, action, stepCost))
 
     def getCostOfActions(self, actions):
         # TODO 5
-        pass
+        """
+        Return the cost of a particular sequence of actions. If no illegal actions, return -1
+        """
+        if actions is None:
+            # no actions
+            return -1
+
+        x, y = self.getStartState()
+        cost = 0
+        for action in actions:
+            # find the successor and check whether it's legal
+            dx, dy = Actions.directionToVector(action)
+            successor_x = int(x + dx)
+            successor_y = int(y + dy)
+            if self.walls[successor_x][successor_y]:
+                # successor is wall
+                return -1
+            cost += self.costFunc((successor_x, successor_y))
+
+        return cost
 
 
+# TODO
 class MultiFoodSearchProblem(SearchProblem):
+    """
+    MultiFoodSearchProblem is used to find a path that help pacman collect all the dots in the maze
+    State in this way is a tuple (pacmanPos, dotGrid):
+    - pacmanPos: specifies pacman's position (x, y)
+    - dotGrid: a Grid (in game.py) contains 2 values True and False to specify dots on the map
+    """
+
     def __init__(self, startingGameState):
         # TODO 6
-        pass
+        self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
+        self.walls = startingGameState.getWalls()
+        self.startingGameState = startingGameState
+        self.expanded = 0
+        # Store information about heuristic
+        self.heuristicInfo = {}
 
     def getStartState(self):
         # TODO 7
-        pass
+        return self.start
 
     def isGoalState(self, state):
         # TODO 8
-        pass
+        return state[1].count() == 0
 
     def getSuccessors(self, state):
         # TODO 9
-        pass
+        """
+        For a given state, it will return a list of (successor, action, stepCost):
+        - successor: successor to the current state
+        - action: required action to get there
+        - stepCost = 1
+        """
+        successors = []
+        self.expanded += 1
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            x, y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            successor_x = int(x + dx)
+            successor_y = int(y + dy)
+            if not self.walls[successor_x][successor_y]:
+                successor = state[1].copy()
+                successor[successor_x][successor_y] = False
+                successors.append((((successor_x, successor_y), successor), action, 1))
+
+        return successors
+
 
     def getCostOfActions(self, actions):
         # TODO 10
-        pass
+        """
+        Return the cost of a particular sequence of actions. If no illegal actions, return -1
+        """
+        x, y = self.getStartState()[0]
+        cost = 0
+        for action in actions:
+            # find the successor and check whether it's legal
+            dx, dy = Actions.directionToVector(action)
+            successor_x = int(x + dx)
+            successor_y = int(y + dy)
+            if self.walls[successor_x][successor_y]:
+                # successor is wall
+                return -1
+            cost += 1
+
+        return cost
