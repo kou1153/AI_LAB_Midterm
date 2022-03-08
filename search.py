@@ -98,20 +98,28 @@ def nullHeuristic(state, problem=None):
     return 0
 
 
-def singleFoodSearchHeuristic(state, problem=None):
+def singleFoodSearchHeuristic(state, problem=None): # state includes a pacman position and a food position
     """
     A heuristic function for the problem of single food search
     """
     # TODO 20
-    pass
+    position, foodPos = state[0], state[1]
+    return ((position[0] - foodPos[0]) ** 2 + (position[1] - foodPos[1]) ** 2 ) ** 0.5
 
 
-def multiFoodSearchHeuristic(state, problem=None):
+def multiFoodSearchHeuristic(state, problem=None): # state includes pac pos in [0] and food positions onwards
     """
     A heuristic function for the problem of multi-food search
     """
     # TODO 21
-    pass
+    position = state[0]
+    foodPos = []
+    for i in range(len(state) - 1):
+        foodPos.append(state[i + 1])
+    totalH = 0
+    for food in foodPos:
+        totalH += ((position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2 ) ** 0.5
+    return totalH
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):
