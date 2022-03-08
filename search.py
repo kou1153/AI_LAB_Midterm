@@ -46,7 +46,6 @@ def breadthFirstSearch(problem):
     frontier.push(problem.getStartState())
     visited = []
     path = []
-    tempPath = []
     currentPath = util.Queue()
     currentState = frontier.pop()
     while not problem.isGoalState(currentState):
@@ -72,16 +71,16 @@ def uniformCostSearch(problem):
     frontier.push(problem.getStartState(), 0)
     visited = []
     path = []
-    tempPath = []
     currentPath = util.PriorityQueue()
     currentState = frontier.pop()
+    cost = 0
     while not problem.isGoalState(currentState):
         if currentState not in visited:
             visited.append(currentState)
             successors = problem.getSuccessors(currentState)
             for childNode, direction, stepCost in successors:
                 tempPath = path + [direction]
-                cost = problem.getCostOfActions(tempPath)
+                cost += 1
                 if childNode not in visited:
                     frontier.push(childNode, cost)
                     currentPath.push(tempPath, cost)

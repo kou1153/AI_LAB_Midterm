@@ -36,7 +36,7 @@ class SearchAgent(Agent):
         problem = self.searchProblem(state)
         self.agentActions = self.searchAlgorithm(problem)
         totalSteps = len(self.agentActions)
-        print(self.agentActions)
+        print(totalSteps)
 
     def getAction(self, state):
         """
