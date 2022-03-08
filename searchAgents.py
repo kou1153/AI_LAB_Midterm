@@ -34,7 +34,14 @@ class SearchAgent(Agent):
         # TODO 11
         self.agentActionIndex = -1
         problem = self.searchProblem(state)
-        self.agentActions = self.searchAlgorithm(problem)
+        if self.AlgoCheck:
+            if self.Single:
+                self.agentAction = self.searchAlgorithm(problem, search.singleFoodSearchHeuristic)
+            else:
+                self.agentAction = self.searchAlgorithm(problem, search.multiFoodSearchHeuristic)
+        else:
+            self.agentActions = self.searchAlgorithm(problem)
+        # self.agentActions = self.searchAlgorithm(problem)
         print(f"Total steps of Pacman took: {problem.getCostOfActions(self.agentActions)}")
 
     def getAction(self, state):
@@ -56,6 +63,7 @@ class SearchAgent(Agent):
 class BFSFoodSearchAgent(SearchAgent):
     # TODO 13
     def __init__(self):
+        # self.AlgoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.breadthFirstSearch
 
@@ -63,6 +71,7 @@ class BFSFoodSearchAgent(SearchAgent):
 class BFSMultipleFoodSearchAgent(SearchAgent):
     # TODO 13
     def __init__(self):
+        self.AlgoCheck = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.breadthFirstSearch
 
@@ -70,6 +79,7 @@ class BFSMultipleFoodSearchAgent(SearchAgent):
 class DFSFoodSearchAgent(SearchAgent):
     # TODO 14
     def __init__(self):
+        self.AlgoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.depthFirstSearch
 
@@ -77,6 +87,7 @@ class DFSFoodSearchAgent(SearchAgent):
 class DFSMultipleFoodSearchAgent(SearchAgent):
     # TODO 14
     def __init__(self):
+        self.AlgoCheck = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.depthFirstSearch
 
@@ -84,6 +95,7 @@ class DFSMultipleFoodSearchAgent(SearchAgent):
 class UCSFoodSearchAgent(SearchAgent):
     # TODO 15
     def __init__(self):
+        self.AlgoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.uniformCostSearch
 
@@ -91,10 +103,24 @@ class UCSFoodSearchAgent(SearchAgent):
 class UCSMultipleFoodSearchAgent(SearchAgent):
     # TODO 15
     def __init__(self):
+        self.AlgoCheck = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.uniformCostSearch
 
 
 class AStarFoodSearchAgent(SearchAgent):
     # TODO 16
-    pass
+    def __init__(self):
+        self.AlgoCheck = True
+        self.Single = True
+        self.searchProblem = problems.SingleFoodSearchProblem
+        self.searchAlgorithm = search.aStarSearch
+
+
+class AStarMultipleFoodSearchAgent(SearchAgent):
+    # TODO 16
+    def __init__(self):
+        self.AlgoCheck = True
+        self.Single = False
+        self.searchProblem = problems.MultiFoodSearchProblem
+        self.searchAlgorithm = search.aStarSearch
