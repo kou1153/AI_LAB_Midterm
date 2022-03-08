@@ -51,7 +51,7 @@ class SingleFoodSearchProblem(SearchProblem):
     SingleFoodSearchProblem is used to find paths to a particular point on the board
     """
 
-    def __init__(self, startingGameState, start=None, goal=(1, 1), costFunc=lambda x: 1, warn=True, visualize=True):
+    def __init__(self, startingGameState, start=None, goal=(1, 1), warn=True, visualize=True):
         # TODO 1
         """
         Save start and goal positions (x, y)
@@ -65,7 +65,6 @@ class SingleFoodSearchProblem(SearchProblem):
             self.startState = start
 
         self.goal = goal
-        self.costFunc = costFunc
         self.visualize = visualize
 
         if warn and (startingGameState.getNumFood() != 1 or not startingGameState.hasFood(*goal)):
@@ -88,15 +87,14 @@ class SingleFoodSearchProblem(SearchProblem):
         - stepCost: the incremental cost of expanding to the successor
         """
         successors = []
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]: # check all directions
             x, y = state
             dx, dy = Actions.directionToVector(action)
             successor_x = int(x + dx)
             successor_y = int(y + dy)
             if not self.walls[successor_x][successor_y]:
                 successor = (successor_x, successor_y)
-                stepCost = self.costFunc(successor)
-                successors.append((successor, action, stepCost))
+                successors.append((successor, action, 1))
 
     def getCostOfActions(self, actions):
         # TODO 5
@@ -108,7 +106,7 @@ class SingleFoodSearchProblem(SearchProblem):
             return -1
 
         x, y = self.getStartState()
-        cost = 0
+        totalCost = 0
         for action in actions:
             # find the successor and check whether it's legal
             dx, dy = Actions.directionToVector(action)
@@ -117,9 +115,9 @@ class SingleFoodSearchProblem(SearchProblem):
             if self.walls[successor_x][successor_y]:
                 # successor is wall
                 return -1
-            cost += self.costFunc((successor_x, successor_y))
+            totalCost += 1
 
-        return cost
+        return totalCost
 
 
 # TODO
@@ -133,7 +131,8 @@ class MultiFoodSearchProblem(SearchProblem):
 
     def __init__(self, startingGameState):
         # TODO 6
-        self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
+        pacmanPos, dotGrid = startingGameState.getPacmanPosition(), startingGameState.getFood()
+        self.startState = (pacmanPos, dotGrid)
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
         self.expanded = 0
@@ -142,7 +141,7 @@ class MultiFoodSearchProblem(SearchProblem):
 
     def getStartState(self):
         # TODO 7
-        return self.start
+        return self.startState
 
     def isGoalState(self, state):
         # TODO 8
@@ -177,7 +176,7 @@ class MultiFoodSearchProblem(SearchProblem):
         Return the cost of a particular sequence of actions. If no illegal actions, return -1
         """
         x, y = self.getStartState()[0]
-        cost = 0
+        totalCost = 0
         for action in actions:
             # find the successor and check whether it's legal
             dx, dy = Actions.directionToVector(action)
@@ -186,6 +185,6 @@ class MultiFoodSearchProblem(SearchProblem):
             if self.walls[successor_x][successor_y]:
                 # successor is wall
                 return -1
-            cost += 1
+            totalCost += 1
 
-        return cost
+        return totalCost
