@@ -175,15 +175,7 @@ class PriorityQueueWithFunction(PriorityQueue):
     Class has one attribute as a function.
     The function is called to compute the priority of item before being pushed in
     '''
-
-    def __init__(self, priorityFunction):
-        "priorityFunction (item) -> priority"
-        self.priorityFunction = priorityFunction  # store the priority function
-        PriorityQueue.__init__(self)  # super-class initializer
-
-    def push(self, item):
-        "Adds an item to the queue with priority from the priority function"
-        PriorityQueue.push(self, item, self.priorityFunction(item))
+    pass
 
 
 def manhattanDistance(xy1, xy2):

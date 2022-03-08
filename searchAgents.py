@@ -1,5 +1,7 @@
 import random
 
+import problems
+import search
 from game import Agent
 from game import Directions
 
@@ -30,6 +32,11 @@ class SearchAgent(Agent):
         state: a GameState object (pacman.py)
         """
         # TODO 11
+        self.agentActionIndex = -1
+        problem = self.searchProblem(state)
+        self.agentActions = self.searchAlgorithm(problem)
+        totalSteps = len(self.agentActions)
+        print(self.agentActions)
 
     def getAction(self, state):
         """
@@ -40,21 +47,53 @@ class SearchAgent(Agent):
         state: a GameState object (pacman.py)
         """
         # TODO 12
+        self.agentActionIndex += 1
+        if len(self.agentActions) > self.agentActionIndex:
+            return self.agentActions[self.agentActionIndex]
+        else:
+            return Directions.STOP
 
 
 class BFSFoodSearchAgent(SearchAgent):
     # TODO 13
-    pass
+    def __init__(self):
+        self.searchProblem = problems.SingleFoodSearchProblem
+        self.searchAlgorithm = search.breadthFirstSearch
+
+
+class BFSMultipleFoodSearchAgent(SearchAgent):
+    # TODO 13
+    def __init__(self):
+        self.searchProblem = problems.MultiFoodSearchProblem
+        self.searchAlgorithm = search.breadthFirstSearch
 
 
 class DFSFoodSearchAgent(SearchAgent):
     # TODO 14
-    pass
+    def __init__(self):
+        self.searchProblem = problems.SingleFoodSearchProblem
+        self.searchAlgorithm = search.depthFirstSearch
+
+
+class DFSMultipleFoodSearchAgent(SearchAgent):
+    # TODO 14
+    def __init__(self):
+        self.searchProblem = problems.MultiFoodSearchProblem
+        self.searchAlgorithm = search.depthFirstSearch
 
 
 class UCSFoodSearchAgent(SearchAgent):
     # TODO 15
-    pass
+    def __init__(self):
+        self.searchProblem = problems.SingleFoodSearchProblem
+        self.searchAlgorithm = search.uniformCostSearch
+
+
+class UCSMultipleFoodSearchAgent(SearchAgent):
+    # TODO 15
+    def __init__(self):
+        self.searchProblem = problems.MultiFoodSearchProblem
+        self.searchAlgorithm = search.uniformCostSearch
 
 
 class AStarFoodSearchAgent(SearchAgent):

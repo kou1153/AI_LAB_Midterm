@@ -96,6 +96,8 @@ class SingleFoodSearchProblem(SearchProblem):
                 successor = (successor_x, successor_y)
                 successors.append((successor, action, 1))
 
+        return successors
+
     def getCostOfActions(self, actions):
         # TODO 5
         """
@@ -168,7 +170,6 @@ class MultiFoodSearchProblem(SearchProblem):
                 successors.append((((successor_x, successor_y), successor), action, 1))
 
         return successors
-
 
     def getCostOfActions(self, actions):
         # TODO 10
