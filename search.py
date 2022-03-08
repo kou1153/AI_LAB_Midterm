@@ -73,14 +73,13 @@ def uniformCostSearch(problem):
     path = []
     currentPath = util.PriorityQueue()
     currentState = frontier.pop()
-    cost = 0
     while not problem.isGoalState(currentState):
         if currentState not in visited:
             visited.append(currentState)
             successors = problem.getSuccessors(currentState)
             for childNode, direction, stepCost in successors:
                 tempPath = path + [direction]
-                cost += 1
+                cost = problem.getCostOfActions(tempPath)
                 if childNode not in visited:
                     frontier.push(childNode, cost)
                     currentPath.push(tempPath, cost)

@@ -114,9 +114,6 @@ class SingleFoodSearchProblem(SearchProblem):
             dx, dy = Actions.directionToVector(action)
             successor_x = int(x + dx)
             successor_y = int(y + dy)
-            if self.walls[successor_x][successor_y]:
-                # successor is wall
-                return -1
             totalCost += 1
 
         return totalCost
@@ -183,9 +180,6 @@ class MultiFoodSearchProblem(SearchProblem):
             dx, dy = Actions.directionToVector(action)
             successor_x = int(x + dx)
             successor_y = int(y + dy)
-            if self.walls[successor_x][successor_y]:
-                # successor is wall
-                return -1
             totalCost += 1
 
         return totalCost
