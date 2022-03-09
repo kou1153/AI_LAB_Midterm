@@ -2,7 +2,8 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
-
+import problems
+import search
 from game import Directions
 
 n = Directions.NORTH
@@ -102,9 +103,6 @@ def singleFoodSearchHeuristic(state, problem=None):  # state includes a pacman p
     A heuristic function for the problem of single food search
     """
     # TODO 20
-    # position, foodPos = state[0], state[1]
-    # return ((position[0] - foodPos[0]) ** 2 + (position[1] - foodPos[1]) ** 2) ** 0.5
-    print("SingleFood")
 
 
 def multiFoodSearchHeuristic(state, problem=None):  # state includes pac pos in [0] and food positions onwards
@@ -112,15 +110,82 @@ def multiFoodSearchHeuristic(state, problem=None):  # state includes pac pos in 
     A heuristic function for the problem of multi-food search
     """
     # TODO 21
-    # position = state[0]
-    # foodPos = []
-    # for i in range(len(state) - 1):
-    #     foodPos.append(state[i + 1])
-    # totalH = 0
-    # for food in foodPos:
-    #     totalH += ((position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2) ** 0.5
-    # return totalH
-    print("MultipleFood")
+    position, foodGrid = state
+
+    heuristic = 0
+    foodList = foodGrid.asList()
+    print(foodList)
+
+    # calculate the distance from current node to food-containing nodes
+    if len(foodList) > 0:
+        closestPoint = findClosestPoint(position, foodList)
+        farthestPoint = findFarthestPoint(position, foodList)
+
+        closestPointIndex = closestPoint[0]
+        farthestPointIndex = farthestPoint[0]
+
+        currentNode = problem.startingGameState
+        closestFoodNode = foodList[closestPointIndex]
+        farthestFoodNode = foodList[farthestPointIndex]
+
+        # distance between current location and closest manhattan node
+        currentToClosest = mazeDistance(position, closestFoodNode, currentNode)
+
+        # distance between closest manhattan node and farthest manhattan node
+        closestToFarthest = mazeDistance(closestFoodNode, farthestFoodNode, currentNode)
+
+        heuristic = currentToClosest + closestToFarthest
+    return heuristic
+
+
+def findClosestPoint(location, goalArray):
+    closestPoint = 0
+    closestPointCost = util.manhattanDistance(location, goalArray[0])
+
+    for j in range(len(goalArray)):
+        # calculate distance between current state to corner
+        cornerLocation = goalArray[j]
+        lengthToCorner = util.manhattanDistance(location, cornerLocation)
+
+        if lengthToCorner < closestPointCost:
+            closestPoint = j
+            closestPointCost = lengthToCorner
+
+    return (closestPoint, closestPointCost)
+
+
+def findFarthestPoint(location, goalArray):
+    farthestPoint = 0
+    farthestPointCost = util.manhattanDistance(location, goalArray[0])
+
+    for j in range(len(goalArray)):
+        # calculate distance between current state to corner
+        cornerLocation = goalArray[j]
+        lengthToCorner = util.manhattanDistance(location, cornerLocation)
+
+        if lengthToCorner > farthestPointCost:
+            farthestPoint = j
+            farthestPointCost = lengthToCorner
+
+    return (farthestPoint, farthestPointCost)
+
+
+def mazeDistance(point1, point2, gameState):
+    """
+    Returns the maze distance between any two points, using the search functions
+    you have already built. The gameState can be any game state -- Pacman's
+    position in that state is ignored.
+
+    Example usage: mazeDistance( (2,4), (5,6), gameState)
+
+    """
+    x1, y1 = point1
+    x2, y2 = point2
+    walls = gameState.getWalls()
+    assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
+    assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
+    prob = problems.SingleFoodSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
+    return len(search.breadthFirstSearch(prob))
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):

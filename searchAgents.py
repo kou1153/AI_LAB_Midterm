@@ -36,9 +36,9 @@ class SearchAgent(Agent):
         problem = self.searchProblem(state)
         if self.AlgoCheck:
             if self.Single:
-                self.agentAction = self.searchAlgorithm(problem, search.singleFoodSearchHeuristic)
+                self.agentActions = self.searchAlgorithm(problem, search.singleFoodSearchHeuristic)
             else:
-                self.agentAction = self.searchAlgorithm(problem, search.multiFoodSearchHeuristic)
+                self.agentActions = self.searchAlgorithm(problem, search.multiFoodSearchHeuristic)
         else:
             self.agentActions = self.searchAlgorithm(problem)
         # self.agentActions = self.searchAlgorithm(problem)

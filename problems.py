@@ -107,13 +107,13 @@ class SingleFoodSearchProblem(SearchProblem):
             # no actions
             return -1
 
-        x, y = self.getStartState()
+        # x, y = self.getStartState()
         totalCost = 0
         for action in actions:
             # find the successor and check whether it's legal
-            dx, dy = Actions.directionToVector(action)
-            successor_x = int(x + dx)
-            successor_y = int(y + dy)
+            # dx, dy = Actions.directionToVector(action)
+            # successor_x = int(x + dx)
+            # successor_y = int(y + dy)
             totalCost += 1
 
         return totalCost
@@ -173,13 +173,13 @@ class MultiFoodSearchProblem(SearchProblem):
         """
         Return the cost of a particular sequence of actions. If no illegal actions, return -1
         """
-        x, y = self.getStartState()[0]
+        # x, y = self.getStartState()[0]
         totalCost = 0
         for action in actions:
             # find the successor and check whether it's legal
-            dx, dy = Actions.directionToVector(action)
-            successor_x = int(x + dx)
-            successor_y = int(y + dy)
+            # dx, dy = Actions.directionToVector(action)
+            # successor_x = int(x + dx)
+            # successor_y = int(y + dy)
             totalCost += 1
 
         return totalCost
