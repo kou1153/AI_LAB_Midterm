@@ -104,7 +104,7 @@ def singleFoodSearchHeuristic(state, problem=None):
     """
     # TODO 20
     successors = problem.getSuccessors(state)
-    foodGrid = problem.isFood()
+    foodGrid = problem.getFoodPos()
     foodList = foodGrid.asList()
 
     heuristic = util.manhattanDistance(successors[0][0], foodList[0])

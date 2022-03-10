@@ -51,36 +51,28 @@ class SingleFoodSearchProblem(SearchProblem):
     SingleFoodSearchProblem is used to find paths to a particular point on the board
     """
 
-    def __init__(self, startingGameState, start=None, goal=(1, 1), warn=True, visualize=True):
+    def __init__(self, startingGameState):
         # TODO 1
         """
-        Save start and goal positions (x, y)
         startingGameState: a GameState object (in pacman.py)
-        costFunc: a function from a search state to a positive number
-        goal: a position in the startingGameState
         """
         self.walls = startingGameState.getWalls()
-        self.startState = startingGameState.getPacmanPosition()
-        self.food = startingGameState.getFood()
-        if start is not None:
-            self.startState = start
+        self.PacmanPos = startingGameState.getPacmanPosition()
+        self.foodGrid = startingGameState.getFood()
+        for x in range(self.foodGrid.width):
+            for y in range(self.foodGrid.height):
+                if startingGameState.hasFood(x, y):
+                    self.food = (x, y)
+                    break
 
-        self.goal = goal
-        self.visualize = visualize
-
-        if warn and (startingGameState.getNumFood() != 1 or not startingGameState.hasFood(*goal)):
-            print("The maze is not for single food search")
 
     def getStartState(self):
         # TODO 2
-        return self.startState
+        return self.PacmanPos
 
     def isGoalState(self, state):
         # TODO 3
-        return state == self.goal
-
-    def isFood(self):
-        return self.food
+        return state == self.food
 
     def getSuccessors(self, state):
         # TODO 4
@@ -111,16 +103,10 @@ class SingleFoodSearchProblem(SearchProblem):
             # no actions
             return -1
 
-        # x, y = self.getStartState()
-        totalCost = 0
-        for action in actions:
-            # find the successor and check whether it's legal
-            # dx, dy = Actions.directionToVector(action)
-            # successor_x = int(x + dx)
-            # successor_y = int(y + dy)
-            totalCost += 1
+        return len(actions)
 
-        return totalCost
+    def getFoodPos(self):
+        return self.food
 
 
 # TODO
@@ -139,8 +125,6 @@ class MultiFoodSearchProblem(SearchProblem):
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
         self.expanded = 0
-        # Store information about heuristic
-        self.heuristicInfo = {}
 
     def getStartState(self):
         # TODO 7
@@ -177,13 +161,8 @@ class MultiFoodSearchProblem(SearchProblem):
         """
         Return the cost of a particular sequence of actions. If no illegal actions, return -1
         """
-        # x, y = self.getStartState()[0]
-        totalCost = 0
-        for action in actions:
-            # find the successor and check whether it's legal
-            # dx, dy = Actions.directionToVector(action)
-            # successor_x = int(x + dx)
-            # successor_y = int(y + dy)
-            totalCost += 1
+        if actions is None:
+            # no actions
+            return -1
 
-        return totalCost
+        return len(actions)
