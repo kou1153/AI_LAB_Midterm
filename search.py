@@ -1,7 +1,7 @@
-"""
-In search.py, you will implement generic search algorithms which are called by
-Pacman agents (in searchAgents.py).
-"""
+# """
+# In search.py, you will implement generic search algorithms which are called by
+# Pacman agents (in searchAgents.py).
+# """
 import problems
 import search
 from game import Directions, Actions
@@ -19,23 +19,18 @@ def depthFirstSearch(problem):
     return a path to the goal
     '''
     # TODO 17
-    frontier = util.Stack()
-    frontier.push(problem.getStartState())
-    visited = []
-    path = []  # Directions
-    currentPath = util.Stack()
-    currentState = frontier.pop()
-    while not problem.isGoalState(currentState):
-        if currentState not in visited:
-            visited.append(currentState)
-            successors = problem.getSuccessors(currentState)
-            for childNode, direction, stepCost in successors:
-                frontier.push(childNode)
-                tempPath = path + [direction]
-                currentPath.push(tempPath)
-        currentState = frontier.pop()
-        path = currentPath.pop()
-    return path
+    closedSet = set()
+    fringe = util.Stack()
+    fringe.push((problem.getStartState(), []))
+    while not fringe.isEmpty():
+        nodeState, path = fringe.pop()
+        if (problem.isGoalState(nodeState)):
+            return path
+        if (nodeState not in closedSet):
+            closedSet.add(nodeState)
+            for successor in problem.getSuccessors(nodeState):
+                fringe.push((successor[0], path + [successor[1]]))
+    return closedSet
 
 
 def breadthFirstSearch(problem):
@@ -43,24 +38,18 @@ def breadthFirstSearch(problem):
     return a path to the goal
     '''
     # TODO 18
-    frontier = util.Queue()
-    frontier.push(problem.getStartState())
-    visited = []
-    path = []
-    currentPath = util.Queue()
-    currentState = frontier.pop()
-    while not problem.isGoalState(currentState):
-        if currentState not in visited:
-            visited.append(currentState)
-            successors = problem.getSuccessors(currentState)
-            for childNode, direction, stepCost in successors:
-                frontier.push(childNode)
-                tempPath = path + [direction]
-                currentPath.push(tempPath)
-        currentState = frontier.pop()
-        path = currentPath.pop()
-
-    return path
+    closedSet = set()
+    fringe = util.Queue()
+    fringe.push((problem.getStartState(), []))
+    while not fringe.isEmpty():
+        nodeState, path = fringe.pop()
+        if (problem.isGoalState(nodeState)):
+            return path
+        if (nodeState not in closedSet):
+            closedSet.add(nodeState)
+            for successor in problem.getSuccessors(nodeState):
+                fringe.push((successor[0], path + [successor[1]]))
+    return closedSet
 
 
 def uniformCostSearch(problem):
@@ -68,25 +57,17 @@ def uniformCostSearch(problem):
     return a path to the goal
     '''
     # TODO 19
-    frontier = util.PriorityQueue()
-    frontier.push(problem.getStartState(), 0)
-    visited = []
-    path = []
-    currentPath = util.PriorityQueue()
-    currentState = frontier.pop()
-    while not problem.isGoalState(currentState):
-        if currentState not in visited:
-            visited.append(currentState)
-            successors = problem.getSuccessors(currentState)
-            for childNode, direction, stepCost in successors:
-                tempPath = path + [direction]
-                cost = problem.getCostOfActions(tempPath)
-                if childNode not in visited:
-                    frontier.push(childNode, cost)
-                    currentPath.push(tempPath, cost)
-        currentState = frontier.pop()
-        path = currentPath.pop()
-
+    closedSet = {}
+    fringe = util.PriorityQueue()
+    fringe.push((problem.getStartState(), [], 0), 0)
+    while not fringe.isEmpty():
+        nodeState, path, cost = fringe.pop()
+        if (problem.isGoalState(nodeState)):
+            return path
+        if ((nodeState not in closedSet) or (cost < closedSet[nodeState])):
+            closedSet[nodeState] = cost
+            for successor in problem.getSuccessors(nodeState):
+                fringe.push((successor[0], path + [successor[1]], cost + successor[2]), cost + successor[2])
     return path
 
 
@@ -104,10 +85,9 @@ def singleFoodSearchHeuristic(state, problem=None):
     """
     # TODO 20
     successors = problem.getSuccessors(state)
-    foodGrid = problem.getFoodPos()
-    foodList = foodGrid.asList()
+    foodPos = problem.getFoodPos()
 
-    heuristic = util.manhattanDistance(successors[0][0], foodList[0])
+    heuristic = util.manhattanDistance(successors[0][0], foodPos)
 
     return heuristic
 
@@ -142,6 +122,7 @@ def multiFoodSearchHeuristic(state, problem=None):  # state includes pac pos in 
 
         heuristic = currentToClosest + closestToFarthest
     return heuristic
+
 
 def findClosestPoint(location, goalArray):
     closestPoint = 0
@@ -189,34 +170,47 @@ def mazeDistance(point1, point2, gameState):
     walls = gameState.getWalls()
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
-    prob = problems.SingleFoodSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
+    prob = problems.SingleFoodSearchProblem(gameState)
     return len(search.breadthFirstSearch(prob))
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    '''
-    return a path to the goal
-    '''
-    # TODO 22
     frontier = util.PriorityQueue()
-    frontier.push(problem.getStartState(), 0)
-    currentState = frontier.pop()
-    visited = []
-    path = []
-    currentPath = util.PriorityQueue()
-    while not problem.isGoalState(currentState):
-        if currentState not in visited:
-            visited.append(currentState)
-            successors = problem.getSuccessors(currentState)
-            for childNode, direction, stepCost in successors:
-                tempPath = path + [direction]
-                cost = problem.getCostOfActions(tempPath) + heuristic(childNode, problem)
-                if childNode not in visited:
-                    frontier.push(childNode, cost)
-                    currentPath.push(tempPath, cost)
-        currentState = frontier.pop()
-        path = currentPath.pop()
-    return path
+
+    def frontierAdd(frontier, node, cost):  # node is a tuple with format like : (state, cost, path)
+        cost += heuristic(node[0], problem)  # f(n) = g(n) + h(n), heuristic(state, problem=None)
+        frontier.push(node, cost)
+
+    # initialize the frontier using the initial state of problem
+    startState = (problem.getStartState(), 0, [])  # node is a tuple with format like : (state, cost, path)
+    frontierAdd(frontier, startState, 0)  # frontierAdd(frontier, node, cost)
+
+    # initialize the explored set to be empty
+    explored = set()  # use set to keep distinct
+
+    # loop do
+    while not frontier.isEmpty():
+        # choose a leaf node and remove it from the frontier
+        (state, cost, path) = frontier.pop()
+
+        # if the node contains a goal state then return the corresponding solution
+        if problem.isGoalState(state):
+            return path
+
+        # add the node to the explored set
+        if not state in explored:
+            explored.add(state)
+
+            # expand the chosen node, adding the resulting nodes to the frontier
+            # ??? only if not in the frontier or explored set
+            for childState, childAction, childCost in problem.getSuccessors(state):
+                newCost = cost + childCost  # Notice! Can't use cost += childCost
+                newPath = path + [childAction]  # Notice! Can't use path.append(childAction)
+                newState = (childState, newCost, newPath)
+                frontierAdd(frontier, newState, newCost)
+
+    # if the frontier is empty then return failure
+    return "There is nothing in frontier. Failure!"
 
 
 # Abbreviations
