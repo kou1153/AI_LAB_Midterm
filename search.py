@@ -4,7 +4,7 @@ Pacman agents (in searchAgents.py).
 """
 import problems
 import search
-from game import Directions
+from game import Directions, Actions
 
 n = Directions.NORTH
 s = Directions.SOUTH
@@ -98,11 +98,18 @@ def nullHeuristic(state, problem=None):
     return 0
 
 
-def singleFoodSearchHeuristic(state, problem=None):  # state includes a pacman position and a food position
+def singleFoodSearchHeuristic(state, problem=None):
     """
     A heuristic function for the problem of single food search
     """
     # TODO 20
+    successors = problem.getSuccessors(state)
+    foodGrid = problem.isFood()
+    foodList = foodGrid.asList()
+
+    heuristic = util.manhattanDistance(successors[0][0], foodList[0])
+
+    return heuristic
 
 
 def multiFoodSearchHeuristic(state, problem=None):  # state includes pac pos in [0] and food positions onwards
@@ -114,7 +121,6 @@ def multiFoodSearchHeuristic(state, problem=None):  # state includes pac pos in 
 
     heuristic = 0
     foodList = foodGrid.asList()
-    print(foodList)
 
     # calculate the distance from current node to food-containing nodes
     if len(foodList) > 0:
@@ -131,12 +137,11 @@ def multiFoodSearchHeuristic(state, problem=None):  # state includes pac pos in 
         # distance between current location and closest manhattan node
         currentToClosest = mazeDistance(position, closestFoodNode, currentNode)
 
-        # distance between closest manhattan node and farthest manhattan node
+        # distance between the closest manhattan node and farthest manhattan node
         closestToFarthest = mazeDistance(closestFoodNode, farthestFoodNode, currentNode)
 
         heuristic = currentToClosest + closestToFarthest
     return heuristic
-
 
 def findClosestPoint(location, goalArray):
     closestPoint = 0

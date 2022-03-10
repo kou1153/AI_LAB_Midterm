@@ -63,7 +63,7 @@ class SearchAgent(Agent):
 class BFSFoodSearchAgent(SearchAgent):
     # TODO 13
     def __init__(self):
-        # self.AlgoCheck = False
+        self.AlgoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.breadthFirstSearch
 

@@ -61,6 +61,7 @@ class SingleFoodSearchProblem(SearchProblem):
         """
         self.walls = startingGameState.getWalls()
         self.startState = startingGameState.getPacmanPosition()
+        self.food = startingGameState.getFood()
         if start is not None:
             self.startState = start
 
@@ -77,6 +78,9 @@ class SingleFoodSearchProblem(SearchProblem):
     def isGoalState(self, state):
         # TODO 3
         return state == self.goal
+
+    def isFood(self):
+        return self.food
 
     def getSuccessors(self, state):
         # TODO 4
