@@ -12,6 +12,7 @@ e = Directions.EAST
 w = Directions.WEST
 
 import util
+from datetime import datetime
 
 
 def depthFirstSearch(problem):
@@ -19,14 +20,16 @@ def depthFirstSearch(problem):
     return a path to the goal
     '''
     # TODO 17
+    timeStart = datetime.now()
     closedSet = set()
     fringe = util.Stack()
     fringe.push((problem.getStartState(), []))
     while not fringe.isEmpty():
         nodeState, path = fringe.pop()
-        if (problem.isGoalState(nodeState)):
+        if problem.isGoalState(nodeState):
+            print(datetime.now() - timeStart)
             return path
-        if (nodeState not in closedSet):
+        if nodeState not in closedSet:
             closedSet.add(nodeState)
             for successor in problem.getSuccessors(nodeState):
                 fringe.push((successor[0], path + [successor[1]]))
@@ -38,14 +41,16 @@ def breadthFirstSearch(problem):
     return a path to the goal
     '''
     # TODO 18
+    timeStart = datetime.now()
     closedSet = set()
     fringe = util.Queue()
     fringe.push((problem.getStartState(), []))
     while not fringe.isEmpty():
         nodeState, path = fringe.pop()
-        if (problem.isGoalState(nodeState)):
+        if problem.isGoalState(nodeState):
+            print(datetime.now() - timeStart)
             return path
-        if (nodeState not in closedSet):
+        if nodeState not in closedSet:
             closedSet.add(nodeState)
             for successor in problem.getSuccessors(nodeState):
                 fringe.push((successor[0], path + [successor[1]]))
@@ -57,14 +62,16 @@ def uniformCostSearch(problem):
     return a path to the goal
     '''
     # TODO 19
+    timeStart = datetime.now()
     closedSet = {}
     fringe = util.PriorityQueue()
     fringe.push((problem.getStartState(), [], 0), 0)
     while not fringe.isEmpty():
         nodeState, path, cost = fringe.pop()
-        if (problem.isGoalState(nodeState)):
+        if problem.isGoalState(nodeState):
+            print(datetime.now() - timeStart)
             return path
-        if ((nodeState not in closedSet) or (cost < closedSet[nodeState])):
+        if (nodeState not in closedSet) or (cost < closedSet[nodeState]):
             closedSet[nodeState] = cost
             for successor in problem.getSuccessors(nodeState):
                 fringe.push((successor[0], path + [successor[1]], cost + successor[2]), cost + successor[2])
@@ -175,6 +182,7 @@ def mazeDistance(point1, point2, gameState):
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):
+    timeStart = datetime.now()
     frontier = util.PriorityQueue()
 
     def frontierAdd(frontier, node, cost):  # node is a tuple with format like : (state, cost, path)
@@ -195,6 +203,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
         # if the node contains a goal state then return the corresponding solution
         if problem.isGoalState(state):
+            print(datetime.now() - timeStart)
             return path
 
         # add the node to the explored set
