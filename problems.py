@@ -45,7 +45,6 @@ class SearchProblem:
         util.raiseNotDefined()
 
 
-# TODO
 class SingleFoodSearchProblem(SearchProblem):
     """
     SingleFoodSearchProblem is used to find paths to a particular point on the board
@@ -57,33 +56,41 @@ class SingleFoodSearchProblem(SearchProblem):
         startingGameState: a GameState object (in pacman.py)
         """
         self.walls = startingGameState.getWalls()
-        self.PacmanPos = startingGameState.getPacmanPosition()
+        self.pacmanPos = startingGameState.getPacmanPosition()
+
+        # find foodPosition
         self.foodGrid = startingGameState.getFood()
+        """
+        because there is only 1 food in singleFoodSearchProblem 
+        """
         for x in range(self.foodGrid.width):
             for y in range(self.foodGrid.height):
                 if startingGameState.hasFood(x, y):
                     self.food = (x, y)
                     break
 
-
     def getStartState(self):
         # TODO 2
-        return self.PacmanPos
+        # return pacmanPos
+        return self.pacmanPos
 
     def isGoalState(self, state):
         # TODO 3
+        """
+        if pacmanPos (state) is at foodPos
+        """
         return state == self.food
 
     def getSuccessors(self, state):
         # TODO 4
         """
-        For a given state, it will return a list of (successor, action, stepCost):
+        For a given state (pacmanPos), it will return a list of (successor, action, stepCost):
         - successor: successor to the current state
         - action: required action to get there
         - stepCost: the incremental cost of expanding to the successor
         """
         successors = []
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]: # check all directions
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:  # check all directions
             x, y = state
             dx, dy = Actions.directionToVector(action)
             successor_x = int(x + dx)
@@ -97,7 +104,8 @@ class SingleFoodSearchProblem(SearchProblem):
     def getCostOfActions(self, actions):
         # TODO 5
         """
-        Return the cost of a particular sequence of actions. If no illegal actions, return -1
+        When an action is added to the path for checking,it is ensured to be valid
+        Return the cost of a particular sequence of actions (number of actions). If no illegal actions, return -1
         """
         if actions is None:
             # no actions
@@ -109,25 +117,24 @@ class SingleFoodSearchProblem(SearchProblem):
         return self.food
 
 
-# TODO
 class MultiFoodSearchProblem(SearchProblem):
     """
     MultiFoodSearchProblem is used to find a path that help pacman collect all the dots in the maze
-    State in this way is a tuple (pacmanPos, dotGrid):
-    - pacmanPos: specifies pacman's position (x, y)
+    State in this way is a tuple (pacmanPos, foodGrid):
+    - pacmanPos: specifies pacman position (x, y)
     - dotGrid: a Grid (in game.py) contains 2 values True and False to specify dots on the map
     """
 
     def __init__(self, startingGameState):
         # TODO 6
-        pacmanPos, dotGrid = startingGameState.getPacmanPosition(), startingGameState.getFood()
-        self.startState = (pacmanPos, dotGrid)
-        self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self.expanded = 0
+        pacmanPos, foodGrid = startingGameState.getPacmanPosition(), startingGameState.getFood()
+        self.startState = (pacmanPos, foodGrid)
+        self.walls = startingGameState.getWalls()
 
     def getStartState(self):
         # TODO 7
+        # return a gameState
         return self.startState
 
     def isGoalState(self, state):
@@ -143,7 +150,6 @@ class MultiFoodSearchProblem(SearchProblem):
         - stepCost = 1
         """
         successors = []
-        self.expanded += 1
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)
@@ -159,6 +165,7 @@ class MultiFoodSearchProblem(SearchProblem):
     def getCostOfActions(self, actions):
         # TODO 10
         """
+        When an action is added to the path for checking,it is ensured to be valid
         Return the cost of a particular sequence of actions. If no illegal actions, return -1
         """
         if actions is None:

@@ -41,7 +41,6 @@ class SearchAgent(Agent):
                 self.agentActions = self.searchAlgorithm(problem, search.multiFoodSearchHeuristic)
         else:
             self.agentActions = self.searchAlgorithm(problem)
-        # self.agentActions = self.searchAlgorithm(problem)
         print(f"Total steps of Pacman took: {len(self.agentActions)}")
 
     def getAction(self, state):
