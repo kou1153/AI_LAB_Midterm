@@ -34,8 +34,8 @@ class SearchAgent(Agent):
         # TODO 11
         self.agentActionIndex = -1
         problem = self.searchProblem(state)
-        if self.AlgoCheck:
-            if self.Single:
+        if self.algoCheck:
+            if self.single:
                 self.agentActions = self.searchAlgorithm(problem, search.singleFoodSearchHeuristic)
             else:
                 self.agentActions = self.searchAlgorithm(problem, search.multiFoodSearchHeuristic)
@@ -62,7 +62,7 @@ class SearchAgent(Agent):
 class BFSFoodSearchAgent(SearchAgent):
     # TODO 13
     def __init__(self):
-        self.AlgoCheck = False
+        self.algoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.breadthFirstSearch
 
@@ -70,7 +70,7 @@ class BFSFoodSearchAgent(SearchAgent):
 class BFSMultipleFoodSearchAgent(SearchAgent):
     # TODO 13
     def __init__(self):
-        self.AlgoCheck = False
+        self.algoCheck = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.breadthFirstSearch
 
@@ -78,7 +78,7 @@ class BFSMultipleFoodSearchAgent(SearchAgent):
 class DFSFoodSearchAgent(SearchAgent):
     # TODO 14
     def __init__(self):
-        self.AlgoCheck = False
+        self.algoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.depthFirstSearch
 
@@ -86,7 +86,7 @@ class DFSFoodSearchAgent(SearchAgent):
 class DFSMultipleFoodSearchAgent(SearchAgent):
     # TODO 14
     def __init__(self):
-        self.AlgoCheck = False
+        self.algoCheck = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.depthFirstSearch
 
@@ -94,7 +94,7 @@ class DFSMultipleFoodSearchAgent(SearchAgent):
 class UCSFoodSearchAgent(SearchAgent):
     # TODO 15
     def __init__(self):
-        self.AlgoCheck = False
+        self.algoCheck = False
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.uniformCostSearch
 
@@ -102,7 +102,7 @@ class UCSFoodSearchAgent(SearchAgent):
 class UCSMultipleFoodSearchAgent(SearchAgent):
     # TODO 15
     def __init__(self):
-        self.AlgoCheck = False
+        self.algoCheck = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.uniformCostSearch
 
@@ -110,8 +110,8 @@ class UCSMultipleFoodSearchAgent(SearchAgent):
 class AStarFoodSearchAgent(SearchAgent):
     # TODO 16
     def __init__(self):
-        self.AlgoCheck = True
-        self.Single = True
+        self.algoCheck = True
+        self.single = True
         self.searchProblem = problems.SingleFoodSearchProblem
         self.searchAlgorithm = search.aStarSearch
 
@@ -119,7 +119,7 @@ class AStarFoodSearchAgent(SearchAgent):
 class AStarMultipleFoodSearchAgent(SearchAgent):
     # TODO 16
     def __init__(self):
-        self.AlgoCheck = True
-        self.Single = False
+        self.algoCheck = True
+        self.single = False
         self.searchProblem = problems.MultiFoodSearchProblem
         self.searchAlgorithm = search.aStarSearch

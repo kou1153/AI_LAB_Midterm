@@ -5,6 +5,8 @@ import tkinter
 
 import file as file
 
+import util
+
 _Windows = sys.platform == 'win32'  # True if on Win95/98/NT
 
 _root_window = None  # The root window for graphics output
@@ -68,6 +70,7 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
         _canvas.pack()
         draw_background()
         _canvas.update()
+        # util.getCord(_canvas)
     except:
         _root_window = None
         raise

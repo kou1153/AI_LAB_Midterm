@@ -649,3 +649,27 @@ def unmutePrint():
 
     sys.stdout = _ORIGINAL_STDOUT
     # sys.stderr = _ORIGINAL_STDERR
+
+
+# from datetime import datetime
+# import pyscreenshot  # pip install pyscreenshot
+# import win32gui  # pip install pywin32
+#
+# rect = ()
+#
+#
+# def getCord(canvas):
+#     global rect
+#     hwnd = canvas.winfo_id()
+#     rect = win32gui.GetWindowRect(hwnd)
+#     return rect
+#
+#
+# def takeScreenshot():
+#     # topLeft
+#     global rect
+#     image = pyscreenshot.grab(bbox=rect)
+#     time = datetime.now().strftime("%Y%m%d%H%M%S")
+#     fileName = str(time) + ".jpg"
+#     # print(fileName)
+#     image.show()
