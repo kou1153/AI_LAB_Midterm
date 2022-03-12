@@ -198,10 +198,10 @@ def multiFoodSearchHeuristic(state, problem=None):
         farthestFoodIndex = farthestFood[0]
         farthestFoodPos = foodList[farthestFoodIndex]
 
-        # distance between current location and closest manhattan state
+        # distance between current location and closest food state
         currentToClosest = mazeDistance(pacmanPos, closestFoodPos, currentState)
 
-        # distance between the closest manhattan state and farthest manhattan state
+        # distance between the closest food state and farthest food state
         closestToFarthest = mazeDistance(closestFoodPos, farthestFoodPos, currentState)
 
         heuristic = currentToClosest + closestToFarthest
